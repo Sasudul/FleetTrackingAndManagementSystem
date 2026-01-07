@@ -2,11 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Optional: Smooth scrolling for the map interactions */
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  @apply bg-gray-50 text-slate-900;
+@layer base {
+  body {
+    @apply antialiased text-slate-900 bg-slate-50;
+  }
 }

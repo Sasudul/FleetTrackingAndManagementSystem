@@ -17,7 +17,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check Local Storage on load
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
 
@@ -38,7 +37,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     setToken(data.token);
     setUser(userData);
-
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(userData));
   };
