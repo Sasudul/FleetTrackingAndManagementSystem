@@ -14,6 +14,17 @@ export interface LoginResponse {
   fullName: string;
 }
 
+export interface Vehicle {
+  id: string;
+  licensePlate: string;
+  make: string;
+  model: string;
+  status: 'ACTIVE' | 'MAINTENANCE' | 'RETIRED';
+  fuelType: string;
+  currentLat?: number;
+  currentLng?: number;
+}
+
 export interface AuthState {
   user: User | null;
   token: string | null;

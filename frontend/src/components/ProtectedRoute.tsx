@@ -5,9 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 const ProtectedRoute: React.FC = () => {
   const { token, isLoading } = useAuth();
 
-  if (isLoading) {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>;
-  }
+  if (isLoading) return <div className="flex h-screen items-center justify-center">Loading...</div>;
 
   return token ? <Outlet /> : <Navigate to="/login" replace />;
 };

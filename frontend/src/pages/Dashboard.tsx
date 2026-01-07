@@ -1,36 +1,36 @@
+import { AlertTriangle, CheckCircle, MapPin, Truck } from 'lucide-react';
 import React from 'react';
-import { useAuth } from '../hooks/useAuth';
+
+const StatCard = ({ title, value, icon: Icon, color }: any) => (
+  <div className="bg-white rounded-xl shadow-sm p-6 flex items-center">
+    <div className={`p-4 rounded-full ${color} bg-opacity-10 mr-4`}>
+      <Icon className={`h-6 w-6 ${color.replace('bg-', 'text-')}`} />
+    </div>
+    <div>
+      <h3 className="text-slate-500 text-sm font-medium">{title}</h3>
+      <p className="text-2xl font-bold text-slate-800">{value}</p>
+    </div>
+  </div>
+);
 
 const Dashboard: React.FC = () => {
-  const { user, logout } = useAuth();
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 justify-between items-center">
-            <div className="text-xl font-bold text-blue-600">FleetTracker</div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">Welcome, {user?.fullName}</span>
-              <button
-                onClick={logout}
-                className="rounded bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
+      
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard title="Total Vehicles" value="12" icon={Truck} color="bg-blue-500" />
+        <StatCard title="Active Trips" value="5" icon={MapPin} color="bg-green-500" />
+        <StatCard title="Maintenance" value="2" icon={AlertTriangle} color="bg-orange-500" />
+        <StatCard title="Available Drivers" value="8" icon={CheckCircle} color="bg-purple-500" />
+      </div>
 
-      <main className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="rounded-lg border-4 border-dashed border-gray-200 p-10 text-center">
-            <h1 className="text-2xl font-semibold text-gray-800">Dashboard Overview</h1>
-            <p className="mt-2 text-gray-600">Map and Fleet statistics will go here.</p>
-          </div>
-        </div>
-      </main>
+      {/* Recent Activity Placeholder */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <h2 className="text-lg font-bold text-slate-800 mb-4">Recent Activity</h2>
+        <div className="text-slate-500 italic">No recent alerts or trips recorded.</div>
+      </div>
     </div>
   );
 };
