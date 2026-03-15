@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import Sidebar from './Sidebar';
+import Sidebar from './SideBar';
 
 const Layout: React.FC = () => {
   const { user } = useAuth();
