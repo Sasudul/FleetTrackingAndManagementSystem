@@ -11,8 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/locations")
-@CrossOrigin(origins = "*")
+@RequestMapping("/locations")
 public class LocationController {
 
     private final LocationService locationService;

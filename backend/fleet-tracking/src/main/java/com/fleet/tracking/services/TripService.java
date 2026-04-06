@@ -95,4 +95,8 @@ public class TripService {
     public List<Trip> getActiveTrips() {
         return tripRepository.findByStatus(TripStatus.IN_PROGRESS);
     }
+
+    public List<Trip> getAllTrips() {
+        return tripRepository.findAll();
+    }
 }

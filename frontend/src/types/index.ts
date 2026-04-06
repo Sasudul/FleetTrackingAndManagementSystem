@@ -14,20 +14,43 @@ export interface LoginResponse {
   fullName: string;
 }
 
+export interface RegisterRequest {
+  email: string;
+  passwordHash: string; // Backend expects this field name (gets BCrypted server-side)
+  fullName: string;
+  role: 'ADMIN' | 'DISPATCHER' | 'DRIVER';
+}
+
 export interface Vehicle {
   id: string;
   licensePlate: string;
+  vin: string;
   make: string;
   model: string;
+  year: number;
   status: 'ACTIVE' | 'MAINTENANCE' | 'RETIRED';
   fuelType: string;
   currentLat?: number;
   currentLng?: number;
 }
 
-export interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
+export interface Driver {
+  id: string;
+  user: User;
+  licenseNumber: string;
+  licenseExpiryDate: string;
+  yearsExperience: number;
+  available: boolean;
+}
+
+export interface Trip {
+  id: string;
+  driver: Driver;
+  vehicle: Vehicle;
+  startLocation: string;
+  endLocation: string;
+  startTime?: string;
+  endTime?: string;
+  distanceKm?: number;
+  status: 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
 }

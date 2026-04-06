@@ -11,8 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/drivers")
-@CrossOrigin(origins = "*")
+@RequestMapping("/drivers")
 public class DriverController {
 
     private final DriverService driverService;
@@ -29,6 +28,11 @@ public class DriverController {
     @GetMapping("/{id}")
     public ResponseEntity<Driver> getDriver(@PathVariable UUID id) {
         return ResponseEntity.ok(driverService.getDriver(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Driver>> getAllDrivers() {
+        return ResponseEntity.ok(driverService.getAllDrivers());
     }
 
     @GetMapping("/available")

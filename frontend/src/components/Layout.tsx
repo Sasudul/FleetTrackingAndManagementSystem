@@ -1,28 +1,26 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './SideBar';
 
+const pageTitles: Record<string, string> = {
+  '/dashboard': 'Overview',
+  '/vehicles': 'Fleet Management',
+  '/drivers': 'Driver Management',
+  '/trips': 'Trip Management',
+};
+
 const Layout: React.FC = () => {
-  const { user } = useAuth();
+  const location = useLocation();
+  const pageTitle = pageTitles[location.pathname] || 'FleetSys';
 
   return (
-    <div className="flex h-screen bg-gray-100 overflow-hidden">
+    <div className="flex h-screen bg-slate-50 overflow-hidden">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Header */}
-        <header className="flex h-16 items-center justify-between bg-white px-6 shadow-sm z-10">
-          <h2 className="text-lg font-semibold text-gray-800">Overview</h2>
-          <div className="flex items-center space-x-4">
-            <span className="text-sm font-medium text-gray-600">{user?.fullName}</span>
-            <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-              {user?.fullName.charAt(0)}
-            </div>
-          </div>
+        <header className="flex h-14 items-center justify-between bg-white px-6 border-b border-slate-200 z-10">
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">{pageTitle}</h2>
         </header>
-
-        {/* Main Content Scrollable Area */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto p-6">
           <Outlet />
         </main>
       </div>

@@ -48,6 +48,10 @@ public class DriverService {
         return driverRepository.findByAvailableTrue();
     }
 
+    public List<Driver> getAllDrivers() {
+        return driverRepository.findAll();
+    }
+
     @Transactional
     public void setAvailability(UUID driverId, boolean isAvailable) {
         Driver driver = getDriver(driverId);

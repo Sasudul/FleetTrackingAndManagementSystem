@@ -4,7 +4,10 @@ import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import Dashboard from './pages/Dashboard';
+import Drivers from './pages/Drivers';
 import Login from './pages/Login';
+import Register from './pages/Register';
+import Trips from './pages/Trips';
 import Vehicles from './pages/Vehicles';
 
 const App: React.FC = () => {
@@ -14,13 +17,15 @@ const App: React.FC = () => {
         <Routes>
           {/* Public */}
           <Route path="/login" element={<Login />} />
-          
+          <Route path="/register" element={<Register />} />
+
           {/* Protected Area with Sidebar Layout */}
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/vehicles" element={<Vehicles />} />
-              {/* Default redirect to dashboard */}
+              <Route path="/drivers" element={<Drivers />} />
+              <Route path="/trips" element={<Trips />} />
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
             </Route>
           </Route>
