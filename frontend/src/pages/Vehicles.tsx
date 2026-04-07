@@ -4,6 +4,7 @@ import api from '../services/api';
 import type { Vehicle } from '../types';
 
 const emptyForm = { licensePlate: '', vin: '', make: '', model: '', year: new Date().getFullYear(), fuelType: 'Diesel' };
+const STATUSES: Vehicle['status'][] = ['ACTIVE', 'MAINTENANCE', 'RETIRED'];
 
 const Vehicles: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -13,6 +14,7 @@ const Vehicles: React.FC = () => {
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState('');
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
 
   useEffect(() => { fetchVehicles(); }, []);
 
@@ -35,6 +37,20 @@ const Vehicles: React.FC = () => {
     } catch (err: any) {
       setFormError(err.response?.data?.message || 'Failed to add vehicle');
     } finally { setSaving(false); }
+  };
+
+  const cycleStatus = async (vehicle: Vehicle) => {
+    const currentIdx = STATUSES.indexOf(vehicle.status);
+    const nextStatus = STATUSES[(currentIdx + 1) % STATUSES.length];
+    setUpdatingStatus(vehicle.id);
+    try {
+      await api.patch(`/vehicles/${vehicle.id}/status?status=${nextStatus}`);
+      setVehicles(prev => prev.map(v => v.id === vehicle.id ? { ...v, status: nextStatus } : v));
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to update status');
+    } finally {
+      setUpdatingStatus(null);
+    }
   };
 
   const filtered = vehicles.filter((v) =>
@@ -92,7 +108,20 @@ const Vehicles: React.FC = () => {
                     </td>
                     <td className="px-8 py-6 whitespace-nowrap"><span className="text-[14px] font-mono font-medium text-uberBlack bg-chipGray px-3 py-1.5 rounded-standard">{v.licensePlate}</span></td>
                     <td className="px-8 py-6 whitespace-nowrap text-[14px] text-bodyGray font-mono">{v.vin || '—'}</td>
-                    <td className="px-8 py-6 whitespace-nowrap"><span className={`px-4 py-1.5 text-[12px] font-semibold tracking-wider rounded-pill ${v.status === 'ACTIVE' ? 'bg-uberBlack text-pureWhite' : 'bg-chipGray text-uberBlack'}`}>{v.status}</span></td>
+                    <td className="px-8 py-6 whitespace-nowrap">
+                      <button
+                        onClick={() => cycleStatus(v)}
+                        disabled={updatingStatus === v.id}
+                        title="Click to change status"
+                        className={`px-4 py-1.5 text-[12px] font-semibold tracking-wider rounded-pill transition-all ${
+                          v.status === 'ACTIVE' ? 'bg-uberBlack text-pureWhite hover:bg-bodyGray' :
+                          v.status === 'MAINTENANCE' ? 'bg-[#f5a623] text-uberBlack hover:bg-[#e09515]' :
+                          'bg-chipGray text-uberBlack hover:bg-hoverGray'
+                        } ${updatingStatus === v.id ? 'opacity-50 cursor-wait' : 'cursor-pointer'}`}
+                      >
+                        {updatingStatus === v.id ? 'Updating...' : v.status}
+                      </button>
+                    </td>
                     <td className="px-8 py-6 whitespace-nowrap text-bodyGray text-[16px]">{v.fuelType || '—'}</td>
                     <td className="px-8 py-6 whitespace-nowrap text-bodyGray text-[16px]">{v.year || '—'}</td>
                   </tr>

@@ -13,6 +13,7 @@ const Drivers: React.FC = () => {
   const [form, setForm] = useState({ licenseNumber: '', licenseExpiryDate: '', yearsExperience: 0 });
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState('');
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   useEffect(() => { fetchDrivers(); }, []);
 
@@ -55,6 +56,18 @@ const Drivers: React.FC = () => {
     d.user?.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     d.licenseNumber?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const toggleAvailability = async (driver: Driver) => {
+    setTogglingId(driver.id);
+    try {
+      await api.patch(`/drivers/${driver.id}/availability`, { available: !driver.available });
+      setDrivers(prev => prev.map(d => d.id === driver.id ? { ...d, available: !d.available } : d));
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to update availability');
+    } finally {
+      setTogglingId(null);
+    }
+  };
 
   return (
     <div className="space-y-12">
@@ -102,8 +115,15 @@ const Drivers: React.FC = () => {
                     <p className="text-[14px] text-bodyGray mt-0.5 truncate">{driver.user?.email}</p>
                   </div>
                 </div>
-                <span className={`flex-shrink-0 px-3 py-1 text-[12px] font-semibold tracking-wider rounded-pill flex items-center gap-1.5 ${driver.available ? 'bg-pureWhite border border-borderBlack text-uberBlack' : 'bg-chipGray text-uberBlack'}`}>
-                  {driver.available ? <><UserCheck className="h-3 w-3" /> Available</> : <><UserX className="h-3 w-3" /> Busy</>}
+                <span
+                  onClick={() => toggleAvailability(driver)}
+                  className={`flex-shrink-0 px-3 py-1 text-[12px] font-semibold tracking-wider rounded-pill flex items-center gap-1.5 cursor-pointer transition-all select-none ${
+                    togglingId === driver.id ? 'opacity-50' :
+                    driver.available ? 'bg-pureWhite border border-borderBlack text-uberBlack hover:bg-chipGray' : 'bg-chipGray text-uberBlack hover:bg-hoverGray'
+                  }`}
+                >
+                  {togglingId === driver.id ? 'Updating...' :
+                    driver.available ? <><UserCheck className="h-3 w-3" /> Available</> : <><UserX className="h-3 w-3" /> Busy</>}
                 </span>
               </div>
               <div className="space-y-3 text-[14px] border-t border-chipGray pt-4 mt-auto">
