@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import type { RegisterRequest } from '../types';
-import { Eye, EyeOff, Truck, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Truck, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 
 const Register: React.FC = () => {
   const [fullName, setFullName] = useState('');
@@ -21,7 +21,6 @@ const Register: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    // Client-side validation
     if (password.length < 6) {
       setError('Password must be at least 6 characters long');
       return;
@@ -36,17 +35,15 @@ const Register: React.FC = () => {
     try {
       const payload: RegisterRequest = {
         email,
-        passwordHash: password, // Backend expects "passwordHash" field name
+        passwordHash: password,
         fullName,
         role,
       };
       await api.post('/auth/register', payload);
       setSuccess(true);
-      // Auto-redirect to login after 2 seconds
       setTimeout(() => navigate('/login'), 2000);
     } catch (err: any) {
-      const message =
-        err.response?.data?.error || err.response?.data?.message || 'Registration failed. Please try again.';
+      const message = err.response?.data?.error || err.response?.data?.message || 'Registration failed. Please try again.';
       setError(message);
     } finally {
       setLoading(false);
@@ -60,202 +57,147 @@ const Register: React.FC = () => {
   ] as const;
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-pureWhite font-sans">
       {/* Left Panel — Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-indigo-500 rounded-full blur-3xl"></div>
-        </div>
-        <div className="relative z-10 flex flex-col justify-center px-16">
-          <div className="flex items-center mb-8">
-            <div className="p-3 bg-blue-600 rounded-xl mr-4">
-              <Truck className="h-8 w-8 text-white" />
-            </div>
-            <h1 className="text-4xl font-bold text-white tracking-tight">
-              Fleet<span className="text-blue-400">Sys</span>
+      <div className="hidden lg:flex lg:w-[45%] bg-uberBlack text-pureWhite flex-col justify-between p-12 lg:p-20 relative overflow-hidden">
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-16">
+            <h1 className="text-[32px] font-bold font-display tracking-tight leading-none text-pureWhite flex items-center gap-1.5">
+              Fleeter
             </h1>
           </div>
-          <p className="text-xl text-blue-200 mb-4 font-light leading-relaxed max-w-md">
-            Join your fleet management team and start coordinating vehicles, drivers, and trips.
+          <h2 className="text-[52px] leading-[1.1] font-bold font-display mb-6 tracking-tight max-w-md">
+            Sign up to manage
+          </h2>
+          <p className="text-[18px] text-mutedGray font-medium max-w-md leading-relaxed">
+            Join your fleet management team and start coordinating vehicles, drivers, and trips efficiently.
           </p>
-          <div className="space-y-4 mt-8">
-            <div className="flex items-center text-slate-300">
-              <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
-              <span className="text-sm">Role-based access control</span>
-            </div>
-            <div className="flex items-center text-slate-300">
-              <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
-              <span className="text-sm">Secure JWT authentication</span>
-            </div>
-            <div className="flex items-center text-slate-300">
-              <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
-              <span className="text-sm">Multi-team collaboration</span>
-            </div>
-          </div>
         </div>
       </div>
 
       {/* Right Panel — Register Form */}
-      <div className="flex-1 flex items-center justify-center bg-slate-50 px-6 py-12">
-        <div className="w-full max-w-md">
+      <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 lg:px-24 bg-pureWhite py-12">
+        <div className="w-full max-w-[440px] mx-auto">
           {/* Mobile branding */}
-          <div className="lg:hidden text-center mb-8">
-            <div className="flex items-center justify-center mb-4">
-              <div className="p-3 bg-blue-600 rounded-xl mr-3">
-                <Truck className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold text-slate-900">
-                Fleet<span className="text-blue-600">Sys</span>
-              </h1>
-            </div>
+          <div className="lg:hidden mb-12">
+            <h1 className="text-[32px] font-bold text-uberBlack font-display tracking-tight flex items-center gap-1.5">
+              Fleeter
+            </h1>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200/60 p-8">
-            {success ? (
-              /* Success State */
-              <div className="text-center py-8">
-                <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                  <CheckCircle2 className="h-8 w-8 text-green-600" />
-                </div>
-                <h2 className="text-2xl font-bold text-slate-900 mb-2">Account Created!</h2>
-                <p className="text-slate-500 mb-6">Your account has been registered successfully.</p>
-                <p className="text-sm text-slate-400">Redirecting to login...</p>
+          {success ? (
+            <div className="text-center py-12">
+              <div className="mx-auto w-16 h-16 bg-chipGray rounded-circle flex items-center justify-center mb-6">
+                <CheckCircle2 className="h-8 w-8 text-uberBlack" />
               </div>
-            ) : (
-              /* Register Form */
-              <>
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-slate-900">Create Account</h2>
-                  <p className="text-slate-500 mt-1">Set up your fleet management profile</p>
+              <h2 className="text-[32px] font-bold font-display text-uberBlack mb-4">Account created</h2>
+              <p className="text-[16px] text-bodyGray mb-2">Welcome to Fleeter.</p>
+              <p className="text-[14px] text-mutedGray">Redirecting you to sign in...</p>
+            </div>
+          ) : (
+            <>
+              <div className="mb-10">
+                <h2 className="text-[32px] leading-[1.25] font-bold text-uberBlack font-display mb-2">Create an account</h2>
+                <p className="text-[16px] text-bodyGray">To access manager dashboard</p>
+              </div>
+
+              {error && (
+                <div className="mb-8 p-4 bg-[#f9e5e5] text-[#cc0000] text-[14px] font-medium rounded-standard">
+                  {error}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <input
+                    id="reg-name"
+                    type="text"
+                    placeholder="Full name"
+                    className="block w-full rounded-standard border border-borderBlack px-4 py-[14px] text-[16px] text-uberBlack placeholder:text-mutedGray focus:ring-[2px] focus:ring-uberBlack focus:outline-none transition-all"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                  />
                 </div>
 
-                {error && (
-                  <div className="mb-5 flex items-start gap-3 rounded-lg bg-red-50 p-4 text-sm text-red-700 border border-red-200">
-                    <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-500 mt-0.5" />
-                    <span>{error}</span>
-                  </div>
-                )}
+                <div>
+                  <input
+                    id="reg-email"
+                    type="email"
+                    placeholder="Email address"
+                    className="block w-full rounded-standard border border-borderBlack px-4 py-[14px] text-[16px] text-uberBlack placeholder:text-mutedGray focus:ring-[2px] focus:ring-uberBlack focus:outline-none transition-all"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label htmlFor="reg-name" className="block text-sm font-medium text-slate-700 mb-1.5">
-                      Full Name
-                    </label>
-                    <input
-                      id="reg-name"
-                      type="text"
-                      placeholder="John Doe"
-                      className="block w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="reg-email" className="block text-sm font-medium text-slate-700 mb-1.5">
-                      Email Address
-                    </label>
-                    <input
-                      id="reg-email"
-                      type="email"
-                      placeholder="name@company.com"
-                      className="block w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  {/* Role Selector */}
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">Role</label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {roles.map((r) => (
-                        <button
-                          key={r.value}
-                          type="button"
-                          onClick={() => setRole(r.value)}
-                          className={`p-3 rounded-lg border-2 text-center transition-all duration-200 ${
-                            role === r.value
-                              ? 'border-blue-500 bg-blue-50 text-blue-700'
-                              : 'border-slate-200 hover:border-slate-300 text-slate-600'
-                          }`}
-                        >
-                          <div className="text-sm font-semibold">{r.label}</div>
-                          <div className="text-xs mt-0.5 opacity-70">{r.desc}</div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="reg-password" className="block text-sm font-medium text-slate-700 mb-1.5">
-                      Password
-                    </label>
-                    <div className="relative">
-                      <input
-                        id="reg-password"
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="Min. 6 characters"
-                        className="block w-full rounded-lg border border-slate-300 px-4 py-2.5 pr-12 text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        minLength={6}
-                      />
+                <div>
+                  <label className="block text-[14px] font-medium text-uberBlack mb-3">Select your role</label>
+                  <div className="flex flex-col gap-3">
+                    {roles.map((r) => (
                       <button
+                        key={r.value}
                         type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                        onClick={() => setRole(r.value)}
+                        className={`flex items-center justify-between p-4 rounded-standard border transition-all duration-200 ${
+                          role === r.value
+                            ? 'border-borderBlack bg-uberBlack text-pureWhite'
+                            : 'border-borderBlack bg-pureWhite text-uberBlack hover:bg-chipGray'
+                        }`}
                       >
-                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        <span className="text-[16px] font-medium">{r.label}</span>
+                        <span className={`text-[12px] ${role === r.value ? 'text-mutedGray' : 'text-bodyGray'}`}>{r.desc}</span>
                       </button>
-                    </div>
+                    ))}
                   </div>
+                </div>
 
-                  <div>
-                    <label htmlFor="reg-confirm" className="block text-sm font-medium text-slate-700 mb-1.5">
-                      Confirm Password
-                    </label>
-                    <input
-                      id="reg-confirm"
-                      type="password"
-                      placeholder="Repeat your password"
-                      className="block w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                      minLength={6}
-                    />
-                  </div>
+                <div className="relative">
+                  <input
+                    id="reg-password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Password (min. 6 characters)"
+                    className="block w-full rounded-standard border border-borderBlack px-4 py-[14px] pr-12 text-[16px] text-uberBlack placeholder:text-mutedGray focus:ring-[2px] focus:ring-uberBlack focus:outline-none transition-all"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                  />
+                </div>
 
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white shadow-lg shadow-blue-500/25 hover:bg-blue-700 hover:shadow-blue-500/40 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 mt-2"
-                  >
-                    {loading ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        Creating Account...
-                      </div>
-                    ) : (
-                      'Create Account'
-                    )}
-                  </button>
-                </form>
+                <div>
+                  <input
+                    id="reg-confirm"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Confirm password"
+                    className="block w-full rounded-standard border border-borderBlack px-4 py-[14px] pr-12 text-[16px] text-uberBlack placeholder:text-mutedGray focus:ring-[2px] focus:ring-uberBlack focus:outline-none transition-all"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    minLength={6}
+                  />
+                </div>
 
-                <p className="mt-6 text-center text-sm text-slate-500">
-                  Already have an account?{' '}
-                  <Link to="/login" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
-                    Sign In
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full rounded-pill bg-uberBlack py-[16px] text-[16px] font-medium text-pureWhite hover:bg-bodyGray focus:outline-none focus:ring-[2px] focus:ring-offset-2 focus:ring-uberBlack disabled:opacity-50 transition-colors mt-6 flex items-center justify-center gap-2"
+                >
+                  {loading ? 'Creating...' : 'Continue'}
+                </button>
+              </form>
+
+              <div className="mt-8 pt-8 border-t border-chipGray flex justify-center">
+                <p className="text-[14px] text-bodyGray">
+                  Already use Fleeter?{' '}
+                  <Link to="/login" className="font-medium text-uberBlack underline decoration-1 underline-offset-4 hover:text-bodyGray transition-colors">
+                    Sign in
                   </Link>
                 </p>
-              </>
-            )}
-          </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

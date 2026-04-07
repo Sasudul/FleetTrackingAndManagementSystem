@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import api from '../services/api';
 import type { LoginResponse } from '../types';
-import { Eye, EyeOff, Truck, AlertCircle } from 'lucide-react';
+import { Truck, Eye, EyeOff } from 'lucide-react';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -33,130 +33,103 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left Panel — Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-indigo-500 rounded-full blur-3xl"></div>
-        </div>
-        <div className="relative z-10 flex flex-col justify-center px-16">
-          <div className="flex items-center mb-8">
-            <div className="p-3 bg-blue-600 rounded-xl mr-4">
-              <Truck className="h-8 w-8 text-white" />
-            </div>
-            <h1 className="text-4xl font-bold text-white tracking-tight">
-              Fleet<span className="text-blue-400">Sys</span>
+    <div className="min-h-screen flex bg-pureWhite font-sans">
+      {/* Left Panel — Branding (Black Background) */}
+      <div className="hidden lg:flex lg:w-[45%] bg-uberBlack text-pureWhite flex-col justify-between p-12 lg:p-20 relative overflow-hidden">
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-16">
+            <h1 className="text-[32px] font-bold font-display tracking-tight leading-none text-pureWhite flex items-center gap-1.5">
+              Fleeter
             </h1>
           </div>
-          <p className="text-xl text-blue-200 mb-4 font-light leading-relaxed max-w-md">
+          <h2 className="text-[52px] leading-[1.1] font-bold font-display mb-6 tracking-tight max-w-md">
+            Go anywhere with Fleeter
+          </h2>
+          <p className="text-[18px] text-mutedGray font-medium max-w-md leading-relaxed">
             Real-time fleet tracking with intelligent trip management and driver coordination.
           </p>
-          <div className="space-y-4 mt-8">
-            <div className="flex items-center text-slate-300">
-              <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
-              <span className="text-sm">Live GPS vehicle tracking</span>
-            </div>
-            <div className="flex items-center text-slate-300">
-              <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
-              <span className="text-sm">Driver management & scheduling</span>
-            </div>
-            <div className="flex items-center text-slate-300">
-              <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
-              <span className="text-sm">Trip lifecycle & route analytics</span>
-            </div>
+        </div>
+        
+        <div className="relative z-10 flex gap-12 text-[16px] text-mutedGray">
+          <div className="space-y-2">
+            <div className="font-semibold text-pureWhite">Tracking</div>
+            <div>Live GPS</div>
+          </div>
+          <div className="space-y-2">
+            <div className="font-semibold text-pureWhite">Management</div>
+            <div>Drivers & Routes</div>
           </div>
         </div>
       </div>
 
       {/* Right Panel — Login Form */}
-      <div className="flex-1 flex items-center justify-center bg-slate-50 px-6">
-        <div className="w-full max-w-md">
+      <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 lg:px-24 bg-pureWhite">
+        <div className="w-full max-w-[440px] mx-auto">
           {/* Mobile branding */}
-          <div className="lg:hidden text-center mb-8">
-            <div className="flex items-center justify-center mb-4">
-              <div className="p-3 bg-blue-600 rounded-xl mr-3">
-                <Truck className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold text-slate-900">
-                Fleet<span className="text-blue-600">Sys</span>
-              </h1>
-            </div>
+          <div className="lg:hidden mb-12">
+            <h1 className="text-[32px] font-bold text-uberBlack font-display tracking-tight flex items-center gap-1.5">
+              Fleeter
+            </h1>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200/60 p-8">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-slate-900">Welcome back</h2>
-              <p className="text-slate-500 mt-1">Sign in to your fleet management account</p>
+          <div className="mb-10">
+            <h2 className="text-[32px] leading-[1.25] font-bold text-uberBlack font-display mb-2">What's your email?</h2>
+            <p className="text-[16px] text-bodyGray">Sign in to your manager account</p>
+          </div>
+
+          {error && (
+            <div className="mb-8 p-4 bg-[#f9e5e5] text-[#cc0000] text-[14px] font-medium rounded-standard">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <input
+                id="login-email"
+                type="email"
+                placeholder="Enter email"
+                className="block w-full rounded-standard border border-borderBlack px-4 py-[14px] text-[16px] text-uberBlack placeholder:text-mutedGray focus:ring-[2px] focus:ring-uberBlack focus:outline-none transition-all"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
 
-            {error && (
-              <div className="mb-6 flex items-center gap-3 rounded-lg bg-red-50 p-4 text-sm text-red-700 border border-red-200">
-                <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-500" />
-                <span>{error}</span>
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="login-email" className="block text-sm font-medium text-slate-700 mb-1.5">
-                  Email Address
-                </label>
-                <input
-                  id="login-email"
-                  type="email"
-                  placeholder="name@company.com"
-                  className="block w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="login-password" className="block text-sm font-medium text-slate-700 mb-1.5">
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    id="login-password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter your password"
-                    className="block w-full rounded-lg border border-slate-300 px-4 py-2.5 pr-12 text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
-              </div>
-
+            <div className="relative">
+              <input
+                id="login-password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Enter password"
+                className="block w-full rounded-standard border border-borderBlack px-4 py-[14px] pr-12 text-[16px] text-uberBlack placeholder:text-mutedGray focus:ring-[2px] focus:ring-uberBlack focus:outline-none transition-all"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
               <button
-                type="submit"
-                disabled={loading}
-                className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white shadow-lg shadow-blue-500/25 hover:bg-blue-700 hover:shadow-blue-500/40 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-uberBlack hover:text-bodyGray transition-colors"
+                aria-label="Toggle password visibility"
               >
-                {loading ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Signing In...
-                  </div>
-                ) : (
-                  'Sign In'
-                )}
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
-            </form>
+            </div>
 
-            <p className="mt-6 text-center text-sm text-slate-500">
-              Don't have an account?{' '}
-              <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
-                Create Account
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-pill bg-uberBlack py-[16px] text-[16px] font-medium text-pureWhite hover:bg-bodyGray focus:outline-none focus:ring-[2px] focus:ring-offset-2 focus:ring-uberBlack disabled:opacity-50 transition-colors mt-4 flex items-center justify-center gap-2"
+            >
+              {loading ? 'Continuing...' : 'Continue'}
+            </button>
+          </form>
+
+          <div className="mt-8 pt-8 border-t border-chipGray flex justify-center">
+            <p className="text-[14px] text-bodyGray">
+              New to Fleeter?{' '}
+              <Link autoFocus={false} to="/register" className="font-medium text-uberBlack underline decoration-1 underline-offset-4 hover:text-bodyGray transition-colors">
+                Sign up to drive
               </Link>
             </p>
           </div>
