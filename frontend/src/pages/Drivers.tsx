@@ -92,17 +92,17 @@ const Drivers: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((driver) => (
             <div key={driver.id} className="bg-pureWhite rounded-standard shadow-level-1 p-6 hover:shadow-level-2 transition-shadow flex flex-col">
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex items-center">
-                  <div className="h-12 w-12 rounded-circle bg-uberBlack flex items-center justify-center text-pureWhite font-bold text-[18px] mr-4">
+              <div className="flex items-start justify-between mb-6 gap-3">
+                <div className="flex items-center min-w-0 flex-1">
+                  <div className="h-12 w-12 rounded-circle bg-uberBlack flex flex-shrink-0 items-center justify-center text-pureWhite font-bold text-[18px] mr-4">
                     {driver.user?.fullName?.charAt(0) || 'D'}
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-uberBlack text-[18px] leading-tight">{driver.user?.fullName || 'Unknown'}</h3>
-                    <p className="text-[14px] text-bodyGray mt-0.5">{driver.user?.email}</p>
+                  <div className="min-w-0 flex-1 pr-2">
+                    <h3 className="font-semibold text-uberBlack text-[18px] leading-tight truncate">{driver.user?.fullName || 'Unknown'}</h3>
+                    <p className="text-[14px] text-bodyGray mt-0.5 truncate">{driver.user?.email}</p>
                   </div>
                 </div>
-                <span className={`px-3 py-1 text-[12px] font-semibold tracking-wider rounded-pill flex items-center gap-1.5 ${driver.available ? 'bg-pureWhite border border-borderBlack text-uberBlack' : 'bg-chipGray text-uberBlack'}`}>
+                <span className={`flex-shrink-0 px-3 py-1 text-[12px] font-semibold tracking-wider rounded-pill flex items-center gap-1.5 ${driver.available ? 'bg-pureWhite border border-borderBlack text-uberBlack' : 'bg-chipGray text-uberBlack'}`}>
                   {driver.available ? <><UserCheck className="h-3 w-3" /> Available</> : <><UserX className="h-3 w-3" /> Busy</>}
                 </span>
               </div>
