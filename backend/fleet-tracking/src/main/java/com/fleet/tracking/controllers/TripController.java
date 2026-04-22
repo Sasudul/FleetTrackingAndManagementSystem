@@ -46,6 +46,11 @@ public class TripController {
         return ResponseEntity.ok(tripService.startTrip(id));
     }
 
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<Trip> cancelTrip(@PathVariable UUID id) {
+        return ResponseEntity.ok(tripService.cancelTrip(id));
+    }
+
     @PatchMapping("/{id}/complete")
     public ResponseEntity<Trip> completeTrip(@PathVariable UUID id, @RequestBody Map<String, Double> payload) {
         Double distance = payload.get("distanceKm");

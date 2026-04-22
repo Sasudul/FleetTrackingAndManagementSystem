@@ -74,6 +74,25 @@ public class TripService {
     }
 
     @Transactional
+    public Trip cancelTrip(UUID tripId) {
+        Trip trip = tripRepository.findById(tripId)
+                .orElseThrow(() -> new RuntimeException("Trip not found"));
+
+        if (trip.getStatus() == TripStatus.COMPLETED) {
+            throw new RuntimeException("Cannot cancel a completed trip.");
+        }
+
+        trip.setStatus(TripStatus.CANCELLED);
+        trip.setEndTime(LocalDateTime.now());
+
+        Driver driver = trip.getDriver();
+        driver.setAvailable(true);
+        driverRepository.save(driver);
+
+        return tripRepository.save(trip);
+    }
+
+    @Transactional
     public Trip completeTrip(UUID tripId, Double finalDistanceKm) {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new RuntimeException("Trip not found"));
